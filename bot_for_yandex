@@ -5,26 +5,56 @@
 // @description  try to take over the world!
 // @author       You
 // @match        https://yandex.ru/*
+// @match        https://xn----7sbab5aqcbiddtdj1e1g.xn--p1ai/*
 // @grant        none
 // ==/UserScript==
 
-let keywords = ['Гобой','Как звучит флейта', 'Кларнет'];
-let keyword = keywords[getRandom(0,keywords.length)];
-if (document.getElementById('text') != null) {
-    document.getElementById('text').value = keyword;
-    let btnFind = document.getElementsByClassName("button mini-suggest__button button_theme_websearch button_size_ws-head i-bem button_js_inited")[0];
-    if(btnFind != undefined){
-       document.getElementsByClassName("button mini-suggest__button button_theme_websearch button_size_ws-head i-bem button_js_inited")[0].click();
-    }
+let yandexInput = document.getElementById('text');
+let keywords = ['Гобой','Как звучит флейта', 'Кларнет','Саксофон'];
+let keyword = 'скрипка'; //'Саксофон'; //keywords[getRandom(0,keywords.length)];
+let btnFind = document.getElementsByClassName("button mini-suggest__button button_theme_websearch button_size_ws-head i-bem button_js_inited")[0];
+
+let i =0;
+//if (document.getElementById('text') != null) {
+//if(btnFind != undefined){
+if(btnFind != undefined && document.getElementById('text') != null){
+
+    let timerId = setInterval(()=>{
+        yandexInput.value += keyword[i];
+        i++;
+        if(i==keyword.length){
+            clearInterval(timerId);
+            //if(btnFind != undefined)
+                btnFind.click();
+        }
+    },1000);
 }else{
     let links = document.links;
+    let nextPage = true;
     for(let i=0; i<links.length; i++){
         if(links[i].href.indexOf("xn----7sbab5aqcbiddtdj1e1g.xn--p1ai") != -1){
             console.log("Ссылка найдена "+links[i] + ' i=' + i);
             if(links[i].hasAttribute("target")) links[i] = links[i].removeAttribute("target");
-            links[i].click();
+            let link = links[i];
+            nextPage = false;
+            setTimeout(()=>{link.click();},getRandom(1000,4000));
             break;
         }
+    }
+
+    if(document.getElementsByClassName("pager__item_current_yes")[0].innerText == "5")
+       {nextPage = false;
+        //location.href = "https://yandex.ru/";
+        location.href = "https://www.google.com/";
+
+       }
+
+    if(nextPage){
+        console.log("nextPage = " + nextPage);
+        setTimeout(()=>{
+            let nextBtn = document.getElementsByClassName("pager__item_kind_next")[0];
+            if( nextBtn != undefined) nextBtn.click();
+        },getRandom(1000,4000));
     }
 }
 
