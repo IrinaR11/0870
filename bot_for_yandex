@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  try to take over the world!
-// @author       You
+// @author       You3
 // @match        https://yandex.ru/*
 // @match        https://xn----7sbab5aqcbiddtdj1e1g.xn--p1ai/*
 // @grant        none
@@ -30,9 +30,12 @@ if(btnFind != undefined){
     //console.log("Мы на музыкалке");
     setInterval(()=>{
         let index = getRandom(0,links.length);
-        if(links[index].href.indexOf("xn----7sbab5aqcbiddtdj1e1g.xn--p1ai")!=-1)
+        if (getRandom(0,101) > 50){
+          location.href = "https://yandex.ru/";  /* переходим на стартовую страницу  */
+        }
+        else if(links[index].href.indexOf("xn----7sbab5aqcbiddtdj1e1g.xn--p1ai")!=-1)
            links[index].click();
-    },getRandom(3000,7000));
+    },getRandom(3000,5000));
 }else{
     let nextPage = true;
     for(let i=0; i<links.length; i++){
@@ -47,8 +50,7 @@ if(btnFind != undefined){
     }
     if(document.getElementsByClassName("pager__item_current_yes")[0].innerText == "5"){
         nextPage = false;
-        //location.href = "https://yandex.ru/";
-        location.href = "https://www.google.com/";
+        location.href = "https://yandex.ru/";
     }
 
     if(nextPage){
